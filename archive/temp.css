@@ -1,0 +1,27 @@
+/* ... Autres styles ... */
+
+/* Style initial pour les boutons avec icônes (invisibles) */
+QPushButton.icon-button {
+    padding: 5px; 
+    font-size: 15px;
+    border: 2px solid #808080;
+    border-radius: 4px;
+    background-color: white;
+    background-image: none; /* Pas d'icône par défaut */
+    opacity: 0; /* Le bouton est initialement invisible */
+}
+
+/* Style lorsqu'on survole le bouton */
+QPushButton.icon-button:hover {
+    background-color: #F0F0F0;
+    opacity: 1; /* L'icône apparaît au survol */
+}
+
+/* Style lorsqu'on appuie sur le bouton */
+QPushButton.icon-button:pressed {
+    background-color: #A0A0A0;
+    border-color: #A0A0A0;
+    opacity: 1; /* L'icône reste visible */;
+    color: black;
+    box-shadow: inset, ;
+}
