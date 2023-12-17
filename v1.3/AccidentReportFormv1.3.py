@@ -71,7 +71,7 @@ class IconButton(QPushButton):
         
 class ReportFormApp:
     def __init__(self):
-        with open(resource_path('data\\texts\\lg.txt'), 'r') as f:
+        with open(resource_path('v1.3\\data\\texts\\lg.txt'), 'r') as f:
             self.language = f.read()
         self.display_body = False
         self.translatable = {}
@@ -81,7 +81,7 @@ class ReportFormApp:
         self.texts = {}
 
         for lg in ("fr", "en", "de"):
-            with open(resource_path(f"data\\texts\\{lg}.txt"), 'r', encoding='utf8') as fichier:
+            with open(resource_path(f"v1.3\\data\\texts\\{lg}.txt"), 'r', encoding='utf8') as fichier:
                 tab = [line[:-1].split(" = ") for line in fichier.readlines()]
                 self.texts[lg] = {line[0] : line[1] for line in tab}
 
@@ -245,7 +245,7 @@ class ReportFormApp:
             button = QPushButton()
             button.setCursor(QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
             #button.setCursor(QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-            icon = QIcon(resource_path(f"data\\images\\flag_{lg}.png"))
+            icon = QIcon(resource_path(f"v1.3\\data\\images\\flag_{lg}.png"))
             button.setIcon(icon)
             button.setFixedSize(QtCore.QSize(64, 64))
             button.setIconSize(QtCore.QSize(48, 48))
@@ -366,7 +366,7 @@ class ReportFormApp:
 
 
         calendar_button = QPushButton()
-        icon = QIcon(resource_path("data\\images\\calendar.png"))      # Icon found on https://www.freepik.com/icon/calendar_55281#fromView=keyword&term=Calendar&page=1&position=6 Icon by Freepik
+        icon = QIcon(resource_path("v1.3\\data\\images\\calendar.png"))      # Icon found on https://www.freepik.com/icon/calendar_55281#fromView=keyword&term=Calendar&page=1&position=6 Icon by Freepik
         calendar_button.setIcon(icon)
         calendar_button.setCursor(QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         calendar_button.setFixedSize(35, 35)
@@ -767,12 +767,12 @@ class ReportFormApp:
         image_view.setRenderHint(QPainter.Antialiasing)
 
         # Charger l'image et la définir comme arrière-plan
-        image = QPixmap(resource_path("data\\images\\body.png"))
+        image = QPixmap(resource_path("v1.3\\data\\images\\body.png"))
         scene.addPixmap(image)
 
         self.body_buttons = {}
-        blank = QIcon(resource_path("data\\images\\blank.png"))
-        cross = QIcon(resource_path("data\\images\\cross.png"))
+        blank = QIcon(resource_path("v1.3\\data\\images\\blank.png"))
+        cross = QIcon(resource_path("v1.3\\data\\images\\cross.png"))
         
         for i in range(1, 36):
             button = IconButton(blank=blank, cross=cross)
@@ -828,7 +828,7 @@ class ReportFormApp:
 
     def switch_language(self, lg):
         self.language = lg
-        with open(resource_path('data\\texts\\lg.txt'), 'w') as f:
+        with open(resource_path('v1.3\\data\\texts\\lg.txt'), 'w') as f:
             f.write(lg)
         for key, value in self.translatable.items():
             value.setText(self.texts[lg][key])
@@ -991,7 +991,7 @@ class ReportFormApp:
             delete_logo = QPushButton()
             delete_logo.setCursor(QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
             delete_logo.setStyleSheet(f"border: none; background-color:teal; padding-right:4px; padding-left:4px; padding-top:6px; padding-bottom:6px")
-            delete_logo.setIcon(QIcon(resource_path("data\\images\\close.png")))
+            delete_logo.setIcon(QIcon(resource_path("v1.3\\data\\images\\close.png")))
             delete_logo.setIconSize(QtCore.QSize(20, 20))
             delete_logo.clicked.connect(self.remove_logo)
             self.logo_layout.addWidget(delete_logo, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignRight)
@@ -1086,7 +1086,7 @@ class ReportFormApp:
                 painter.fillRect(pixmap.rect(), QtCore.Qt.white)
                 self.body_image.render(painter)
                 painter.end()
-                pixmap.save(resource_path('data\\images\\body_capture.png'))
+                pixmap.save(resource_path('v1.3\\data\\images\\body_capture.png'))
                 for value in self.body_buttons.values():
                     if value.activated:
                         value.setIconSize(value.none_size)
@@ -1101,8 +1101,8 @@ class ReportFormApp:
 class PDFGenerator:
     def __init__(self, answer, texts, language) -> None:
         self.answer, self.texts, self.language = answer, texts, language
-        self.full_box = Image(resource_path("data\\images\\box.png"), 12, 12)
-        self.empty_box = Image(resource_path("data\\images\\empty_box.png"), 12, 12)
+        self.full_box = Image(resource_path("v1.3\\data\\images\\box.png"), 12, 12)
+        self.empty_box = Image(resource_path("v1.3\\data\\images\\empty_box.png"), 12, 12)
 
         # Different styles
         self.title_style = ParagraphStyle(
@@ -1180,7 +1180,7 @@ class PDFGenerator:
 
     def create_header(self):
         # Header
-        if self.answer['logo'] == '': logo_path = resource_path('data\\images\\blank.png')
+        if self.answer['logo'] == '': logo_path = resource_path('v1.3\\data\\images\\blank.png')
         else: logo_path = self.answer['logo']
         logo = img.open(logo_path)
         logo_w, logo_h = logo.size
@@ -1405,7 +1405,7 @@ class PDFGenerator:
                 ('INNERGRID', (0, 0), (-1, -1), 1, colors.black), # Outer border
                 ('BOTTOMPADDING', (0,0), (-1, -1), 6)
             ]))
-            main_table = Table([[text_table, Image(resource_path("data\\images\\body_capture.png"), width=self.quarter, height=730*(self.quarter/505))]], colWidths=[self.half+self.quarter-10, self.quarter+10])
+            main_table = Table([[text_table, Image(resource_path("v1.3\\data\\images\\body_capture.png"), width=self.quarter, height=730*(self.quarter/505))]], colWidths=[self.half+self.quarter-10, self.quarter+10])
             main_table.setStyle(TableStyle([
                 ('VALIGN', (0, 0), (-1, -1), 'TOP'),
                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),

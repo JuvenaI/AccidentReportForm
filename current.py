@@ -18,9 +18,9 @@
 
 
 
-from PyQt6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget, QCheckBox, QLineEdit, QFrame, QCalendarWidget, QDialog, QTimeEdit, QDateEdit, QAbstractSpinBox, QTextEdit, QScrollArea, QGraphicsView, QGraphicsScene, QGraphicsProxyWidget, QFileDialog
-from PyQt6.QtGui import QIcon, QPixmap, QPainter, QCursor, QGuiApplication
-from PyQt6 import QtCore
+from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget, QCheckBox, QLineEdit, QFrame, QCalendarWidget, QDialog, QTimeEdit, QDateEdit, QAbstractSpinBox, QTextEdit, QScrollArea, QGraphicsView, QGraphicsScene, QGraphicsProxyWidget, QFileDialog
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QCursor
+from PyQt5 import QtCore
 import sys
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Image, Paragraph
@@ -132,7 +132,7 @@ class ReportFormApp:
         self.translatable["export"] = self.export_button
 
     def center_window(self):
-        screen_geometry = QGuiApplication.primaryScreen().geometry()
+        screen_geometry = self.app.desktop().screenGeometry()
         window_width = 1_000
         window_height = 800
         x = (screen_geometry.width() - window_width) // 2
@@ -186,7 +186,7 @@ class ReportFormApp:
 
         # Create the scroll area and set its widget to the scrollable widget
         scroll_area = QScrollArea()
-        #scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollB
+        scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         scroll_area.setStyleSheet("""
             QScrollArea {
                 border: none;
@@ -223,7 +223,7 @@ class ReportFormApp:
         
         scroll_area.setWidget(scroll_widget)
         scroll_area.setWidgetResizable(True)
-        #scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 
         # Add the scroll area to the main layout
         self.main_layout.addWidget(scroll_area)
@@ -257,7 +257,6 @@ class ReportFormApp:
 
         self.title = QLabel(self.texts[self.language]["title"])
         self.title.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        #self.title.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.title.setMinimumWidth(900)
         self.title.setMaximumWidth(1100)
         self.title.setFixedHeight(80)
@@ -335,7 +334,8 @@ class ReportFormApp:
     def create_info_layout(self):
         info_layout = QGridLayout()
 
-        text, boxes = {}, {}
+        text = {}
+        boxes = {}
 
         for i, q in enumerate(("date", "hour", "place")):
 
@@ -350,27 +350,18 @@ class ReportFormApp:
 
         boxes["date"] = QDateEdit()
         boxes["date"].setDate(QtCore.QDate.currentDate())
+        boxes["date"].setButtonSymbols(QAbstractSpinBox.NoButtons)
         
-        boxes["date"].setStyleSheet("""
-                                QDateEdit {
-                                    border: 2px solid teal;
-                                    border-radius: 5px;
-                                    padding-top: 5px;
-                                    padding-bottom: 5px;
-                                    padding-left: 5px;
-                                    padding-right: 10px;
-                                    background-color: white;
-                                    font-size: 16px;
-                                    color: black;
-                                }
-                                QDateEdit::up-button, QDateEdit::down-button {
-                                    width: 0;
-                                    height: 0;
-                                    border: none;
-                                    margin: 0;
-                                    padding: 0;
-                                }
-                            """)
+        boxes["date"].setStyleSheet(
+            f"border: 2px solid {self.accent_color};"
+            "border-radius: 5px;"
+            "padding-top: 5px;"
+            "padding-bottom: 5px;"
+            "padding-left: 5px;"
+            "padding-right: 10px;"
+            "background-color: white;"
+            "font-size: 16px;"
+        )
         info_layout.addWidget(boxes["date"], 0, 1, 1, 2)
 
 
@@ -387,29 +378,8 @@ class ReportFormApp:
 
         boxes["hour"] = QTimeEdit()
         boxes["hour"].setTime(QtCore.QTime.currentTime())
-        boxes["hour"].setCalendarPopup(False)
-        boxes["hour"].setStyleSheet("""
-                                QTimeEdit {
-                                    border: 2px solid teal;
-                                    border-radius: 5px;
-                                    padding-top: 5px;
-                                    padding-bottom: 5px;
-                                    padding-left: 5px;
-                                    padding-right: 10px;
-                                    background-color: white;
-                                    font-size: 16px;
-                                    color: black;
-                                }
-                                QTimeEdit::up-button, QTimeEdit::down-button {
-                                    width: 0;
-                                    height: 0;
-                                    border: none;
-                                    margin: 0;
-                                    padding: 0;
-                                }
-                            """)
-
-        """boxes["hour"].setStyleSheet(
+        boxes["hour"].setButtonSymbols(QAbstractSpinBox.NoButtons)
+        boxes["hour"].setStyleSheet(
             f"border: 2px solid {self.accent_color};"
             "border-radius: 5px;"
             "padding-top: 5px;"
@@ -418,10 +388,7 @@ class ReportFormApp:
             "padding-right: 10px;"
             "background-color: white;"
             "font-size: 16px;"
-            "color: black;"
-        )"""
-
-        
+        )
         info_layout.addWidget(boxes["hour"], 1, 1, 1, 2)
 
 
@@ -548,8 +515,7 @@ class ReportFormApp:
         body_36.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         body_36.setWordWrap(True)
         body_36.setStyleSheet(
-            "font-size: 16px;"
-            "color: black;"
+            "font-size: 16px"
         )
         self.translatable["body_36"] = body_36
         body_layout.addWidget(body_36)
@@ -569,7 +535,7 @@ class ReportFormApp:
         body_37.setEnabled(False)
         body_37.clicked.connect(self.clear_body)
         self.translatable["body_37"] = body_37
-        body_layout.addWidget(body_37, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
+        body_layout.addWidget(body_37, alignment=QtCore.Qt.AlignCenter)
         
         image_view = self.create_body_image()
         body_layout.addWidget(image_view, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -583,23 +549,6 @@ class ReportFormApp:
         attachment_0 = self.create_subtitle(self.texts[self.language]["attachment_0"])
         self.translatable["attachment_0"] = attachment_0
         attachment_layout.addWidget(attachment_0)
-
-
-        self.selected_files = QHBoxLayout()
-        self.selected_files.setContentsMargins(0, 0, 0, 15)
-        attachment_4 = QLabel(self.texts[self.language]["attachment_4"])
-        attachment_4.setStyleSheet('color: black;')
-        attachment_4.hide()
-        self.translatable["attachment_4"] = attachment_4
-        self.selected_files.addWidget(attachment_4)
-
-        placeholder = QLabel()
-        placeholder.setFixedHeight(0)
-        self.selected_files.addWidget(placeholder, stretch=1)
-
-        attachment_layout.addLayout(self.selected_files)
-
-
 
         self.attachment_button_layout = QHBoxLayout()
 
@@ -628,7 +577,6 @@ class ReportFormApp:
             QCheckBox {
                 spacing: 5px;
                 font-size: 15px;
-                color: black;
             }
             QCheckBox::indicator {
                 width: 20px;
@@ -658,8 +606,7 @@ class ReportFormApp:
             "padding-left: 10px;"
             "padding-right: 10px;"
             "background-color: white;"
-            "font-size: 16px;"
-            "color: black;"
+            "font-size: 16px"
         )
         return box
     
@@ -676,7 +623,6 @@ class ReportFormApp:
                 background-color: white;
                 font-size: 16px;
                 line-height: 20px;
-                color: black;
             }
             QScrollBar:vertical {
                 border: none;
@@ -757,8 +703,8 @@ class ReportFormApp:
 
     def create_v_separator(self):
         separator_line = QFrame()
-        separator_line.setFrameShape(QFrame.Shape.VLine)
-        separator_line.setFrameShadow(QFrame.Shadow.Sunken)
+        separator_line.setFrameShape(QFrame.VLine)
+        separator_line.setFrameShadow(QFrame.Sunken)
         separator_line.setFixedWidth(12)
         separator_line.setStyleSheet(
             "background-color: black;"
@@ -769,8 +715,8 @@ class ReportFormApp:
     
     def create_h_separator(self):
         separator_line = QFrame()
-        separator_line.setFrameShape(QFrame.Shape.HLine)
-        separator_line.setFrameShadow(QFrame.Shadow.Sunken)
+        separator_line.setFrameShape(QFrame.HLine)
+        separator_line.setFrameShadow(QFrame.Sunken)
         separator_line.setFixedHeight(17)
         separator_line.setStyleSheet(
             "background-color: black;"
@@ -797,11 +743,11 @@ class ReportFormApp:
         calendar = QCalendarWidget()
         calendar.setSelectedDate(selected_date)
         if self.language == 'fr':
-            locale = QtCore.QLocale(QtCore.QLocale.Language.French)
+            locale = QtCore.QLocale(QtCore.QLocale.French)
         elif self.language == 'en':
-            locale = QtCore.QLocale(QtCore.QLocale.Language.English)
+            locale = QtCore.QLocale(QtCore.QLocale.English)
         elif self.language == 'de':
-            locale = QtCore.QLocale(QtCore.QLocale.Language.German)
+            locale = QtCore.QLocale(QtCore.QLocale.German)
         calendar.setLocale(locale)
 
         calendar.clicked.connect(self.update_date_input)
@@ -810,7 +756,7 @@ class ReportFormApp:
         self.dialog.setWindowTitle("Calendrier")
         self.dialog.setLayout(QVBoxLayout())
         self.dialog.layout().addWidget(calendar)
-        self.dialog.exec()
+        self.dialog.exec_()
 
     def create_body_image(self):
         image_view = QGraphicsView()
@@ -818,7 +764,7 @@ class ReportFormApp:
         image_view.setScene(scene)
         image_view.setFixedHeight(730)
         image_view.setStyleSheet("border:none;")
-        image_view.setRenderHint(QPainter.RenderHint.Antialiasing)
+        image_view.setRenderHint(QPainter.Antialiasing)
 
         # Charger l'image et la définir comme arrière-plan
         image = QPixmap(resource_path("data\\images\\body.png"))
@@ -893,14 +839,14 @@ class ReportFormApp:
         except:
             pass
 
-    def update_category_state(self, state, name, other_checkboxes:[QCheckBox]):
-        if state == 2:
+    def update_category_state(self, state, name, other_checkboxes):
+        if state == QtCore.Qt.Checked:
             for checkbox in other_checkboxes:
                 checkbox.setChecked(False)
             self.answer["category"] = name
 
     def update_report_state(self, state, name, other_checkboxes):
-        if state == 2:
+        if state == QtCore.Qt.Checked:
             for checkbox in other_checkboxes:
                 checkbox.setChecked(False)
             self.answer["report type"] = name
@@ -913,21 +859,20 @@ class ReportFormApp:
         self.dialog.close()
 
     def update_situation_state(self, state, name, current_checkbox, other_checkboxes):
-        if state == 2:
+        if state == QtCore.Qt.Checked:
             # for checkbox in other_checkboxes:
             #     checkbox.setChecked(False)
             if current_checkbox.text()[:2] == "30":
                 self.situation_input.setEnabled(True)
-                self.situation_input.setCursor(QCursor(QtCore.Qt.CursorShape.IBeamCursor))
+                self.situation_input.setCursor(QtCore.Qt.IBeamCursor)
                 self.situation_input.setStyleSheet(
                     f"border: 2px solid {self.accent_color};"
                     "border-radius: 5px;"
-                    "padding-bottom: 1px;"
-                    "padding-left: 2px;"
-                    "padding-right: 2px;"
+                    "padding-left: 5px;"
+                    "padding-right: 5px;"
                     "background-color: white;"
+                    "margin-right: 35px;"
                     "font-size: 15px;"
-                    "color: black;"
                 )
             else:
                 self.answer["situation"].append(name)
@@ -943,8 +888,7 @@ class ReportFormApp:
                 self.answer["situation"].remove(name)
 
     def update_injury_state(self, state, name, current_checkbox, other_checkboxes):
-        if state == 2:
-            
+        if state == QtCore.Qt.Checked:
             for checkbox in other_checkboxes:
                 checkbox.setChecked(False)
             text = current_checkbox.text()
@@ -970,7 +914,6 @@ class ReportFormApp:
         if name in self.answer["organs"]:
             self.answer["organs"].remove(name)
             if self.answer["organs"] == []:
-                self.translatable["body_36"].setText("")
                 self.translatable["body_37"].setEnabled(False)
                 self.translatable["body_37"].setStyleSheet(
                     "border: 2px solid grey;"
@@ -998,7 +941,7 @@ class ReportFormApp:
                     "margin-bottom: 0px;"
                     "font-size: 16px"
                 )
-        self.translatable["body_36"].setText(self.texts[self.language]["body_36"] + " ".join([f"{self.texts[self.language][org]}," for org in self.answer["organs"]])[:-1]) if self.answer["organs"] != [] else self.translatable["body_36"].setText("")
+        self.translatable["body_36"].setText(self.texts[self.language]["body_36"] + " ".join([f"{self.texts[self.language][org]}," for org in self.answer["organs"]])[:-1])
 
         if button.activated:
             button.activated = False
@@ -1040,8 +983,7 @@ class ReportFormApp:
             self.logo_layout = QHBoxLayout()
 
             logo = QPixmap(logo_path)
-            #logo = logo.scaled(QtCore.QSize(200, logo.height()), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-            logo = logo.scaled(QtCore.QSize(200, logo.height()), QtCore.Qt.AspectRatioMode.KeepAspectRatio, QtCore.Qt.TransformationMode.SmoothTransformation)
+            logo = logo.scaled(QtCore.QSize(200, logo.height()), QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
             logo_label = QLabel()
             logo_label.setPixmap(logo)
             self.logo_layout.addWidget(logo_label)
@@ -1052,7 +994,7 @@ class ReportFormApp:
             delete_logo.setIcon(QIcon(resource_path("data\\images\\close.png")))
             delete_logo.setIconSize(QtCore.QSize(20, 20))
             delete_logo.clicked.connect(self.remove_logo)
-            self.logo_layout.addWidget(delete_logo, alignment=QtCore.Qt.AlignmentFlag.AlignTop | QtCore.Qt.AlignmentFlag.AlignRight)
+            self.logo_layout.addWidget(delete_logo, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignRight)
 
             self.logo_layout.addWidget(QLabel(), stretch=1)
 
@@ -1077,9 +1019,15 @@ class ReportFormApp:
 
         if path:
             if self.attachment_layout.count() == 2:
-                pass
+                self.selected_files = QHBoxLayout()
+                self.selected_files.setContentsMargins(0, 0, 0, 15)
+                attachment_4 = QLabel(self.texts[self.language]["attachment_4"])
+                self.translatable["attachment_4"] = attachment_4
+                self.selected_files.addWidget(attachment_4)
+                self.selected_files.addWidget(QLabel(), stretch=1)
 
-            self.translatable["attachment_4"].show()
+                self.attachment_layout.insertLayout(1, self.selected_files)
+
             self.answer["attachment"].append(path)
             if len(path.split('/')) > 1:
                 name = path.split('/')[-1]
@@ -1092,18 +1040,15 @@ class ReportFormApp:
                                  border-radius:10px;
                                  padding:5px;
                                  font-size: 16px;
-                                 color: black;
                                  """)
             button.setCursor(QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
             button.clicked.connect(lambda _, path = path, button = button: self.remove_attachment(path, button))
-            self.selected_files.insertWidget(1, button, alignment=QtCore.Qt.AlignmentFlag.AlignLeft, stretch=0)
+            self.selected_files.insertWidget(1, button, alignment=QtCore.Qt.AlignLeft, stretch=0)
 
     def remove_attachment(self, path, widget):
         self.answer["attachment"].remove(path)
         widget.hide()
         self.selected_files.removeWidget(widget)
-        if self.answer["attachment"] == []:
-            self.translatable["attachment_4"].hide()
         
 
     def export(self):
@@ -1117,16 +1062,14 @@ class ReportFormApp:
 
 
         file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.FileMode.Directory)
 
-        default_filename = self.texts[self.language]['title'] + '_' + "-".join(self.answer['date'].split('/')) + ".pdf"
+        default_filename = self.texts[self.language]['title']+'_'+ "-".join(self.answer['date'].split('/')) + ".pdf"
         initial_dir = str(Path.home())
-        file_path, _ = file_dialog.getSaveFileName(
-            self.window,
-            self.texts[self.language]["ex_prompt"],
-            initial_dir + '/' + default_filename,
-            "PDF files (*.pdf);;All files (*)"
-        )
+        file_path, _ = file_dialog.getSaveFileName(self.window,
+                                                   self.texts[self.language]["ex_prompt"],
+                                                   initial_dir+'/'+default_filename,
+                                                   "PDF files (*.pdf);;All files (*)",
+                                                   options=QFileDialog.Options(QFileDialog.ShowDirsOnly))
 
         if file_path:
             folder_path = os.path.dirname(file_path)  # Folder path
@@ -1140,7 +1083,7 @@ class ReportFormApp:
                         value.setIconSize(QtCore.QSize(20, 20))
                 pixmap = QPixmap(self.body_image.size())
                 painter = QPainter(pixmap)
-                painter.fillRect(pixmap.rect(), QtCore.Qt.GlobalColor.white)
+                painter.fillRect(pixmap.rect(), QtCore.Qt.white)
                 self.body_image.render(painter)
                 painter.end()
                 pixmap.save(resource_path('data\\images\\body_capture.png'))
@@ -1382,9 +1325,9 @@ class PDFGenerator:
             if i in resp:
                 checkboxes_data[y].append(self.full_box)
                 if i == 30:
-                    checkboxes_data[y].append(Paragraph(self.texts[self.language][f'situation_{i}']+text+'_', self.base_style))
+                    checkboxes_data[y].append(Paragraph(self.texts[self.language][f'situation_{i}']+text, self.base_style))
                 else:
-                    checkboxes_data[y].append(Paragraph(self.texts[self.language][f'situation_{i}']+' ', self.base_style))
+                    checkboxes_data[y].append(Paragraph(self.texts[self.language][f'situation_{i}'], self.base_style))
             else:
                 checkboxes_data[y].append(self.empty_box)
                 checkboxes_data[y].append(Paragraph(self.texts[self.language][f'situation_{i}'], self.base_style))
@@ -1476,3 +1419,4 @@ class PDFGenerator:
 
 if __name__ == '__main__':
     app_instance = ReportFormApp()
+
