@@ -257,7 +257,6 @@ class ReportFormApp:
 
         self.title = QLabel(self.texts[self.language]["title"])
         self.title.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        #self.title.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.title.setMinimumWidth(900)
         self.title.setMaximumWidth(1100)
         self.title.setFixedHeight(80)
