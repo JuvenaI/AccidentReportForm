@@ -93,6 +93,7 @@ attachment_1 = Add company logo
 attachment_2 = Attach a document
 attachment_3 = Select a file :
 attachment_4 = File(s) added (Click to delete) :
+import = Import
 export = Export
 ex_prompt = Select a folder :
 pdf_title = Accident / Almost accident /<br></br>Hazard report form

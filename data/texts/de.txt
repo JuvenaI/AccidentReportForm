@@ -93,6 +93,7 @@ attachment_1 = Firmenlogo hinzufügen
 attachment_2 = Ein Dokument anhängen
 attachment_3 = Wählen Sie eine Datei :
 attachment_4 = Dateien hinzugefügt (Zum Löschen klicken) :
+import = Importieren
 export = Ausführen
 ex_prompt = Wählen Sie einen Ordner :
 pdf_title = Berichtsblatt Vorfall /<br></br>Fast Vorfall / Gefahr

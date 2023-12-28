@@ -93,6 +93,7 @@ attachment_1 = Ajouter le logo de l'entreprise
 attachment_2 = Joindre un document
 attachment_3 = Sélectionnez un fichier :
 attachment_4 = Fichiers ajouté(s) (Cliquez pour supprimer) :
+import = Importer
 export = Exporter
 ex_prompt = Sélectionnez un dossier :
 pdf_title = Fiche de Compte-Rendu Accident /<br></br>Presque accident / Danger

@@ -30,7 +30,7 @@ from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
 from PIL import Image as img
 import os
 from pathlib import Path
-from PyPDF2 import PdfReader, PdfWriter
+from PyPDF2 import PdfFileReader
 
 
 system = 'linux'
@@ -125,11 +125,12 @@ class ReportFormApp:
         self.description_layout, self.description_box = self.create_description_layout()
         self.injury_layout, self.comment_box = self.create_injury_layout()
         self.attachment_layout = self.create_attachment_layout()
+        self.import_export_layout = self.create_import_export_layout()
 
 
-        self.export_button = self.create_button(self.texts[self.language]["export"])
-        self.export_button.clicked.connect(self.export)
-        self.translatable["export"] = self.export_button
+        # self.export_button = self.create_button(self.texts[self.language]["export"])
+        # self.export_button.clicked.connect(self.export)
+        # self.translatable["export"] = self.export_button
 
     def center_window(self):
         screen_geometry = QGuiApplication.primaryScreen().geometry()
@@ -228,7 +229,8 @@ class ReportFormApp:
         # Add the scroll area to the main layout
         self.main_layout.addWidget(scroll_area)
 
-        self.main_layout.addWidget(self.export_button, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
+        #self.main_layout.addWidget(self.export_button, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.main_layout.addLayout(self.import_export_layout)
         self.main_layout.setContentsMargins(0, 20, 0, 20)
 
         self.window.setLayout(self.main_layout)
@@ -617,6 +619,26 @@ class ReportFormApp:
         attachment_layout.addLayout(self.attachment_button_layout)
 
         return attachment_layout
+    
+    def create_import_export_layout(self):
+        import_export_layout = QHBoxLayout()
+        import_export_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+
+
+        import_button = self.create_button(self.texts[self.language]["import"])
+        import_button.clicked.connect(self.import_file)
+        import_button.setMaximumWidth(100)
+        self.translatable["import"] = import_button
+        import_export_layout.addWidget(import_button)
+        
+
+        export_button = self.create_button(self.texts[self.language]["export"])
+        export_button.clicked.connect(self.export)
+        export_button.setMaximumWidth(100)
+        self.translatable["export"] = export_button
+        import_export_layout.addWidget(export_button)
+
+        return import_export_layout
 
 
         
@@ -1105,6 +1127,8 @@ class ReportFormApp:
         if self.answer["attachment"] == []:
             self.translatable["attachment_4"].hide()
         
+    def import_file(self):
+        pass
 
     def export(self):
         self.answer["people"] = self.people_box.text()
