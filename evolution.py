@@ -18,7 +18,7 @@
 
 
 
-from PyQt6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget, QCheckBox, QLineEdit, QFrame, QCalendarWidget, QDialog, QTimeEdit, QDateEdit, QAbstractSpinBox, QTextEdit, QScrollArea, QGraphicsView, QGraphicsScene, QGraphicsProxyWidget, QFileDialog
+from PyQt6.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget, QCheckBox, QLineEdit, QFrame, QCalendarWidget, QDialog, QTimeEdit, QDateEdit, QTextEdit, QScrollArea, QGraphicsView, QGraphicsScene, QGraphicsProxyWidget, QFileDialog
 from PyQt6.QtGui import QIcon, QPixmap, QPainter, QCursor, QGuiApplication
 from PyQt6 import QtCore
 import sys
@@ -232,6 +232,8 @@ class ReportFormApp:
         #self.main_layout.addWidget(self.export_button, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
         self.main_layout.addLayout(self.import_export_layout)
         self.main_layout.setContentsMargins(0, 20, 0, 20)
+
+        self.main_layout.setStyleSheet
 
         self.window.setLayout(self.main_layout)
 
@@ -623,7 +625,12 @@ class ReportFormApp:
     def create_import_export_layout(self):
         import_export_layout = QHBoxLayout()
         import_export_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-
+        background = QAre()
+        background.setStyleSheet(
+            f"background-color: {self.accent_color};"
+        )
+        import_export_layout.set(background)
+       
 
         import_button = self.create_button(self.texts[self.language]["import"])
         import_button.clicked.connect(self.import_file)
